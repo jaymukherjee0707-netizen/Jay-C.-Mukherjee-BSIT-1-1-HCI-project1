@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-widh, initial-scale=1">
+<title>QuickBite App</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+}
+
+/* Screens */
+.screen {
+    display: none;
+    padding: 20px;
+}
+.active {
+    display: block;
+}
+
+/* Container */
+.container {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    max-width: 380px;
+    margin: auto;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Inputs */
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 8px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+/* Buttons */
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 10px;
+    background: #ff7e5f;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button:hover {
+    background: #ff4e00;
+    transform: scale(1.05);
+}
+
+/* Food Cards */
+.food-card {
+    background: #fff;
+    border-radius: 15px;
+    margin: 10px 0;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: left;
+}
+.food-card img {
+    width: 100%;
+    border-radius: 10px;
+}
+.food-title {
+    font-weight: bold;
+    margin: 5px 0;
+}
+.price {
+    color: green;
+    font-weight: bold;
+}
+
+/* Cart */
+ul {
+    list-style: none;
+    padding: 0;
+}
+li {
+    background: #ffe0d6;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* Header */
+h2 {
+    text-align: center;
+}
+@media (max-width: 768px) {
+    .food-card {
+        width: 100%;
+    }
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="screen active">
+<div class="container">
+<h2>🍔 QuickBite</h2>
+<!-- <input type="text" placeholder="Username"><br> -->
+<input type="password" placeholder="Password"><br>
+<button onclick="showScreen('home')">Login</button>
+<button onclick="alert('Sign Up clicked')">Sign Up</button>
+</div>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen">
+<div class="container">
+<h2>Welcome to QuickBite!</h2>
+<button onclick="showScreen('menu')">🍽 Order Food</button>
+<button onclick="showScreen('cart')">🛒 View Cart</button>
+<button onclick="showScreen('login')">🚪 Logout</button>
+</div>
+</div>
+
+<!-- MENU -->
+<div id="menu" class="screen">
+<div class="container">
+<h2>Menu</h2>
+
+<div class="food-card">
+<img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd">
+<div class="food-title">Burger</div>
+<div class="price">₱120</div>
+<button onclick="addToCart('Burger',120)">Add to Cart</button>
+</div>
+
+<div class="food-card">
+<img src="pizza.jpg" alt="pizza">
+<div class="food-title">Pizza</div>
+<div class="price">₱250</div>
+<button onclick="addToCart('Pizza',250)">Add to Cart</button>
+</div>
+
+<div class="food-card">
+<img src="fries.jpg" alt="Fries">
+<div class="food-title">Fries</div>
+<div class="price">₱80</div>
+<button onclick="addToCart('Fries',80)">Add to Cart</button>
+</div>
+
+<div class="food-card">
+<img src="Hotdog.jpg" alt="hotdog">
+<div class="food-title">Hotdog Sandwich</div>
+<div class="price">₱90</div>
+<button onclick="addToCart('Hotdog Sandwich',90)">Add to Cart</button>
+</div>
+
+<div class="food-card">
+<img src="fried chicken.jpg" alt="fried checkin">
+<div class="food-title">Fried Chicken</div>
+<div class="price">₱150</div>
+<button onclick="addToCart('Fried Chicken',150)">Add to Cart</button>
+</div>
+
+<div class="food-card">
+<img src="spaghetti.jpg" alt="spaghetti">
+<div class="food-title">Spaghetti</div>
+<div class="price">₱110</div>
+<button onclick="addToCart('Spaghetti',110)">Add to Cart</button>
+</div>
+
+<button onclick="showScreen('home')">⬅ Back</button>
+</div>
+</div>
+
+<!-- CART -->
+<div id="cart" class="screen">
+<div class="container">
+<h2>Your Cart</h2>
+<ul id="cartList"></ul>
+
+<h3>Total: ₱<span id="total">0</span></h3>
+
+<button onclick="checkout()">Checkout</button>
+<button onclick="showScreen('menu')">⬅ Back</button>
+</div>
+</div>
+
+<script>
+let cart = [];
+let total = 0;
+
+function showScreen(screenId) {
+    let screens = document.querySelectorAll('.screen');
+    screens.forEach(screen => screen.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+}
+
+function addToCart(item, price) {
+    cart.push(item);
+    total += price;
+    alert(item + " added to cart!");
+    updateCart();
+}
+
+function updateCart() {
+    let cartList = document.getElementById('cartList');
+    let totalDisplay = document.getElementById('total');
+
+    cartList.innerHTML = "";
+    cart.forEach(item => {
+        let li = document.createElement('li');
+        li.textContent = item;
+        cartList.appendChild(li);
+    });
+
+    totalDisplay.textContent = total;
+}
+
+function checkout() {
+    if (cart.length === 0) {
+        alert("Cart is empty!");
+    } else {
+        alert("Order placed successfully! Total: ₱" + total);
+        cart = [];
+        total = 0;
+        updateCart();
+    }
+}
+</script>
+
+</body>
+</html>
